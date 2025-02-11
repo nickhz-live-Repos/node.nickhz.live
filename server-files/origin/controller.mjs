@@ -1,7 +1,7 @@
 // serves requests to the domain's origin
 import {readFile} from 'node:fs/promises';
+import serve from '../my-custom-modules/serve-static-file.mjs';
 
 export default async (req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(await readFile('./origin/index.html'));
+    await serve('./origin/index.html', res);
 };

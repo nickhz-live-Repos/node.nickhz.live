@@ -1,8 +1,10 @@
 import {createServer} from 'node:http';
 import origin from './origin/controller.mjs';
+import serveFile from './my-custom-modules/serve-static-file.mjs';
 
 const controllers = new Map();
 controllers.set(/^\/$/, origin);
+controllers.set(/^\/favicon.ico/, (req, res) => serveFile('./img/nh-cursive-node-icon.png', res));
 
 const serve = async (req, res) => {
     let controller = null;
