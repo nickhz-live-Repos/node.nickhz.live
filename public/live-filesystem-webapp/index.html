@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<base target="_blank" />
+		<link rel="shortcut icon" type="image/x-icon" href="./folder.gif" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+        <title>Live Filesystem Webapp - Node.js Micro-Project - Nick Hernandez</title>
+
+        <style>
+        	:root {
+        		--book-cover-color: #FDD716;
+
+        		font-size: 1.15rem;
+    			scrollbar-color: var(--book-cover-color) black;
+        	}
+
+        	body {
+        		background-color: var(--book-cover-color);
+        	}
+
+        	body > hgroup:first-child {
+        		text-align: center;
+        	}
+
+        	details > summary {
+        		font-size: 1.4rem;
+        	}
+
+        	.subfolder {
+        		border-left: 1px solid black;
+        		padding-left: 0.5rem;
+        	}
+
+        	main details > summary {
+        		font-size: 1.1rem;
+        	}
+
+        	footer {
+        		height: 35dvh;
+        	}
+
+        	.metadata {
+        		display: none;
+        	}
+
+        	.delete-button {
+        		margin-left: 2rem;
+        	}
+        </style>
+	</head>
+	<body>
+		<hgroup>
+			<h1>
+				Live Filesystem
+			</h1>
+
+			<h2>
+				Micro-project exercise in Node.js
+			</h2>
+
+			<h4>
+				This exercise is part of a self-study regimen that I'm performing with guidance from the textbook <a href="https://eloquentjavascript.net/">Eloquent JavaScript by Marijn Haverbeke</a>. This project's original requirements are detailed under the optional <a href="https://eloquentjavascript.net/20_node.html#i-TLRTlwK6ZU">final exercise of chapter 20</a>, but I've opted to re-architecture this project without using the code from the chapter, while also adding several of my own requirements. This project is where all knowledge from throughout the text may be aggregated into a Node.js backend / JavaScript frontend mini-project, before the final project at the end of the textbook.
+			</h4>
+
+			<h4>
+				At the time of writing, this application only works on a local system with Node.js installed, using the <code>node custom-server.mjs</code> command to run my custom Node.js server scripting. In the future, I may adapt it to deploy over cloud infrastructure, as part of a nickhz.live subdomain project, but this will be outside the scope of this exercise.
+			</h4>
+		</hgroup>
+
+		<details>
+			<summary>
+				Project Requirements
+			</summary>
+
+			<ul>
+				<li>
+					Establish a Node.js HTTP server.
+				</li>
+				<li>
+					Create a front-end Web page (this page) as an initial UI for the application.
+				</li>
+				<li>
+					On the server, create a GET method that serves the front-end Web page UI whenever the base path served by the server is called (i.e., <a href="http://localhost:8000">http://localhost:8000</a>). I'm also including the favicon.
+				</li>
+				<li>
+					On the server, create a PUT method that allows a specified file or directory to be created at a specified path relative to the "files/" folder present in this application. NO FILE INTERACTIONS SHOULD BE POSSIBLE OUTSIDE OF THIS FOLDER, aside from reading (and only reading) the index & favicon.
+				</li>
+				<li>
+					On the UI, create a JavaScript fetch connected to HTML elements that allow the PUT endpoint to be hit with input content from the UI.
+				</li>
+				<li>
+					On the server, create a GET method handler that serves the resource at the specified path whenever it's requested via the URL.
+				</li>
+				<li>
+					On the UI, whenever the home page is retrieved, send a JavaScript fetch to GET the set of all files that are currently in the application so they can be listed.
+				</li>
+				<li>
+					On the UI, set up a structure that communicates the arrangement of folders & files. This structure should reflect the content of the "files/" folder.
+				</li>
+				<li>
+					On the server, set up the PUT response to send an updated file structure to the UI after a file is added.
+				</li>
+				<li>
+					On the UI, ensure that PUT requests update the UI according to the PUT response.
+				</li>
+				<li>
+					On the server, add a DELETE functionality. This should respond with a file structure update and shouldn't be able to delete the "files/" folder.
+				</li>
+				<li>
+					On the UI, ensure that DELETE requests update the UI according to the DELETE response.
+				</li>
+			</ul>
+		</details>
+
+		<hr />
+
+		<main>
+			<hgroup>
+				<h2>
+					The Live System
+				</h2>
+
+				<h4>
+					Create, delete, and visit files here.
+				</h4>
+			</hgroup>
+
+			<div id="live-file-system"></div>
+		</main>
+
+		<footer></footer>
+
+		<script src="./custom-client.js"></script>
+	</body>
+</html>

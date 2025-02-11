@@ -1,0 +1,14 @@
+{
+  "name": "@hernandezn/nodejs",
+  "version": "0.0.1",
+  "description": "Node.js sandbox by & for Nick Hernandez; the content of this folder may serve as prototypes for a nickhz.live subdomain served by Node.js\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[ material for a nickhz.live subdomain served\u001a via Node.js",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hernandezn",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "mime-types": "^2.1.35"
+  }
+}
