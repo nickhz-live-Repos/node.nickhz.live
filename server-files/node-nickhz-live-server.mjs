@@ -1,15 +1,19 @@
 import {createServer} from 'node:http';
-import origin from './controller/origin.mjs';
-import servePublic from './util/serve-public-file.mjs';
+import staticEndpoint from './controller/public.mjs';
+import serve404 from './util/serve-404.mjs';
 
-const controllers = new Map();
-controllers.set(/^\/$/, origin);
-controllers.set(/^\/favicon.ico/, (req, res) => servePublic('img/nh-cursive-node-icon.png', res));
+// const controllers = new Map();
+// controllers.set(/^\/$/, origin);
+// controllers.set(/^\/favicon.ico/, (req, res) => servePublic('img/nh-cursive-node-icon.png', res));
 
 const serve = async (req, res) => {
     req.url = decodeURI(req.url);
+    if(req.method === 'GET' && await staticEndpoint(req, res)) {
+        // staticEndpoint also serves the requested endpoint if applicable
+        return;
+    }
 
-    console.log(req.rawHeaders[req.rawHeaders.indexOf('Host') + 1]);
+    // console.log(req.rawHeaders[req.rawHeaders.indexOf('Host') + 1]);
 
     let controller = null;
 
@@ -24,32 +28,34 @@ const serve = async (req, res) => {
         return await controller(req, res);
     }
 
-    res.writeHead(404, {'Content-Type': 'text/html'});
-    res.write(`
-<!DOCTYPE html>
+    serve404(req, res);
 
-<html>
-    <head>
-        <style>
-            body {
-                background-color: black;
-                color: lime;
-            }
-        </style>
-    </head>
-    <body>
-        <hgroup>
-            <h1>
-                404 not found.
-            </h1>
-            <h4>
-                The requested URL path was: ${req.url}
-            </h4>
-        </hgroup>
-    </body>
-</html>
-`)
-    ;
+//     res.writeHead(404, {'Content-Type': 'text/html'});
+//     res.write(`
+// <!DOCTYPE html>
+
+// <html>
+//     <head>
+//         <style>
+//             body {
+//                 background-color: black;
+//                 color: lime;
+//             }
+//         </style>
+//     </head>
+//     <body>
+//         <hgroup>
+//             <h1>
+//                 404 not found.
+//             </h1>
+//             <h4>
+//                 The requested URL path was: ${req.url}
+//             </h4>
+//         </hgroup>
+//     </body>
+// </html>
+// `)
+//     ;
 };
 
 const server = createServer(
