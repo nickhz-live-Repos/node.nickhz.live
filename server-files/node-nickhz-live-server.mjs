@@ -13,9 +13,21 @@ const serve = async (req, res) => {
         return;
     }
 
+    /*
+        REWORK NEEDED
+
+        -- this framework doesn't handle url parameters & links with hashes properly
+        -- where do I put my API / fetch-intended endpoints?
+        -- should subpath handling really be separated by static versus dynamic, or should it be separated by directory path?
+        -- if separated by directory path, should requested paths be registered so they don't have to be checked more than once?
+
+        ++ IDEA: a site that the webmaster may develop from the site itself...
+    */
+
     // console.log(req.rawHeaders[req.rawHeaders.indexOf('Host') + 1]);
 
     let controller = null;
+    
 
     // for(const route of controllers.keys()) {
     //     if(route.test(req.url)) {
