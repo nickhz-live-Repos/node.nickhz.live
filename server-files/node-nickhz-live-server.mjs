@@ -1,44 +1,31 @@
 import {createServer} from 'node:http';
 import staticEndpoint from './controller/public.mjs';
+import getParsedRoute from './util/parse-url-route.mjs';
 import serve404 from './util/serve-404.mjs';
 
-// const controllers = new Map();
-// controllers.set(/^\/$/, origin);
-// controllers.set(/^\/favicon.ico/, (req, res) => servePublic('img/nh-cursive-node-icon.png', res));
-
 const serve = async (req, res) => {
-    req.url = decodeURI(req.url);
-    if(req.method === 'GET' && await staticEndpoint(req, res)) {
-        // staticEndpoint also serves the requested endpoint if applicable
-        return;
-    }
+    const parsedRoute = getParsedRoute(req.url);
+
+    console.log(parsedRoute);
 
     /*
-        REWORK NEEDED
+        REWORK ITEMS
 
-        -- this framework doesn't handle url parameters & links with hashes properly
+        -- this framework not handling handle url parameters & links with hashes properly...
+        ++ now handled by the parsedRoute object
+
         -- where do I put my API / fetch-intended endpoints?
+        ++ down the pathway specified by the parsedRoute.path array elements
+
         -- should subpath handling really be separated by static versus dynamic, or should it be separated by directory path?
+        ++ this new build will separate by directory path; static pathing will be handled within each path
+
         -- if separated by directory path, should requested paths be registered so they don't have to be checked more than once?
+        ~~ TBD; potentially case by case, or register when successful & de-register when a previous success is unsuccessful
 
         ++ IDEA: a site that the webmaster may develop from the site itself...
+        ~~ this framework may allow this idea to be developed as a sub-application of the node.nickhz.live domain
     */
-
-    // console.log(req.rawHeaders[req.rawHeaders.indexOf('Host') + 1]);
-
-    let controller = null;
-    
-
-    // for(const route of controllers.keys()) {
-    //     if(route.test(req.url)) {
-    //         controller = controllers.get(route);
-    //         break;
-    //     }
-    // }
-
-    if(controller) {
-        return await controller(req, res);
-    }
 
     serve404(req, res);
 };
@@ -47,7 +34,7 @@ const server = createServer(
     (req, res) => {
         serve(req, res)
             .then(() => res.end())
-            .then(spentResponse => {
+            .then(() => {
                 console.log(`[${new Date()}] Served request to: ${req.url}`);
             })
             .catch(err => {
