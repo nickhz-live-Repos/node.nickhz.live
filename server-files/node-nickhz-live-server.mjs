@@ -1,12 +1,29 @@
 import {createServer} from 'node:http';
-import staticEndpoint from './controller/public.mjs';
+// import staticEndpoint from './controller/public.mjs';
 import getParsedRoute from './util/parse-url-route.mjs';
 import serve404 from './util/serve-404.mjs';
 
+const router = initializeRouter('/');
+// !!! STATIC PATHS SHOULD BE AUTO-TARGETED SO THEY DON'T NEED TO BE LISTED HERE
+
+
 const serve = async (req, res) => {
     const parsedRoute = getParsedRoute(req.url);
+    req.path = parsedRoute.path;
+    req.params = parsedRoute.params;
+    req.depth = 0;
+    req.isAtPathEnd = function() {
+        return this.depth >= this.path.length;
+    };
 
-    console.log(parsedRoute);
+    const nextSubRoute = router.get(req.isAtPathEnd() || req.path[req.depth]);
+    req.depth++;
+
+    try {
+        await nextSubRoute(req, res);
+    } catch(e) {
+        serve404(req, res);
+    }
 
     /*
         REWORK ITEMS
@@ -26,8 +43,6 @@ const serve = async (req, res) => {
         ++ IDEA: a site that the webmaster may develop from the site itself...
         ~~ this framework may allow this idea to be developed as a sub-application of the node.nickhz.live domain
     */
-
-    serve404(req, res);
 };
 
 const server = createServer(

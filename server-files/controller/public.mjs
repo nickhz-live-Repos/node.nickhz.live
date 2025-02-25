@@ -1,6 +1,6 @@
 // polls "_public" static-site files against the request url
 
-import serve from '../util/serve-public-file.mjs';
+import {serve} from '../util/serve-public-file.mjs';
 import {readdir, stat} from 'node:fs/promises';
 import serve404 from '../util/serve-404.mjs';
 
