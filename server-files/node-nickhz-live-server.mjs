@@ -1,11 +1,15 @@
 import {createServer} from 'node:http';
 // import staticEndpoint from './controller/public.mjs';
+import { initializeRouter, uninitializedRouter } from './util/serve-public-file.mjs';
 import getParsedRoute from './util/parse-url-route.mjs';
 import serve404 from './util/serve-404.mjs';
 
-const router = initializeRouter('/');
-// !!! STATIC PATHS SHOULD BE AUTO-TARGETED SO THEY DON'T NEED TO BE LISTED HERE
+let router = uninitializedRouter;
 
+// sets static routes
+initializeRouter('/')
+    .then(initializedRouter => { router = initializedRouter; })
+;
 
 const serve = async (req, res) => {
     const parsedRoute = getParsedRoute(req.url);
@@ -16,12 +20,13 @@ const serve = async (req, res) => {
         return this.depth >= this.path.length;
     };
 
-    const nextSubRoute = router.get(req.isAtPathEnd() || req.path[req.depth]);
+    const nextStep = router.get(req.isAtPathEnd() || req.path[req.depth]);
     req.depth++;
 
     try {
-        await nextSubRoute(req, res);
+        await nextStep(req, res);
     } catch(e) {
+        console.log(e);
         serve404(req, res);
     }
 

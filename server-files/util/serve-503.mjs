@@ -1,4 +1,4 @@
-// serves a 404 (Not Found) page
+// serves a 503 (Service Unavailable) page
 
 const pageContentOf = req => `
 <!DOCTYPE html>
@@ -15,7 +15,7 @@ const pageContentOf = req => `
     <body>
         <hgroup>
             <h1>
-                404 not found.
+                503 service unavailable.
             </h1>
             <h4>
                 The requested URL path was: ${req.url}
@@ -26,6 +26,6 @@ const pageContentOf = req => `
 `;
 
 export default (req, res) => {
-    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.writeHead(503, {'Content-Type': 'text/html'});
     res.write(pageContentOf(req));
 };
