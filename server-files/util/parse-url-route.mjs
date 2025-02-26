@@ -1,3 +1,9 @@
+/**
+ * Contains functions for converting the URL from an incoming HTTP request 
+ * into more dynamically operable path & search parameter properties.
+ */
+
+const fallbackBaseUrl = 'http://a';
 
 // https://www.example.com/abc/def?g=123&h=ijk#lmnop -> ['abc', 'def']
 const getPath = (urlObject) => {
@@ -7,7 +13,6 @@ const getPath = (urlObject) => {
         path = path.slice(1);
     }
     if(path[path.length - 1] === '') {
-        console.log('reached last-slash condition');
         path = path.slice(0, path.length - 1);
     }
     for(let i = 0; i < path.length; i++) {
@@ -29,9 +34,11 @@ const getUrlSearchParameters = (urlObject) => {
     return inputParams;
 };
 
-// hashes are not to be handled; Web-standard-compliant browsers are not expected to send a URI fragment to the backend
-
-const fallbackBaseUrl = 'http://a';
+/**
+ * Inputs an IncomingMessage HTTP request and outputs an object detailing the 
+ * route represented by that request, including itemized.filepath elements and 
+ * URL parameters.
+ */
 export default (requestUrl) => {
     let parsedUrl;
     try {

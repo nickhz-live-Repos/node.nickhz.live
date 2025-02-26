@@ -1,15 +1,10 @@
-import {createServer} from 'node:http';
-// import staticEndpoint from './controller/public.mjs';
-import { initializeRouter, uninitializedRouter } from './util/serve-public-file.mjs';
+import { createServer } from 'node:http';
+import { getStaticRouter, refreshStaticRouter } from './util/serve-public-static-file.mjs';
+import getApiAction from './_api/api-controller.mjs';
 import getParsedRoute from './util/parse-url-route.mjs';
 import serve404 from './util/serve-404.mjs';
 
-let router = uninitializedRouter;
-
-// sets static routes
-initializeRouter('/')
-    .then(initializedRouter => { router = initializedRouter; })
-;
+refreshStaticRouter();
 
 const serve = async (req, res) => {
     const parsedRoute = getParsedRoute(req.url);
@@ -20,34 +15,19 @@ const serve = async (req, res) => {
         return this.depth >= this.path.length;
     };
 
-    const nextStep = router.get(req.isAtPathEnd() || req.path[req.depth]);
-    req.depth++;
+    // check for an API action
+    let serveAction = await getApiAction(req, res);
 
-    try {
-        await nextStep(req, res);
-    } catch(e) {
-        console.log(e);
-        serve404(req, res);
+    // if the API action is just a 404, check static routes
+    if(serveAction === serve404) {
+        const requestedDirectory = req.path.join('/');
+        const staticRouter = await getStaticRouter();
+        if(req.method === 'GET' && staticRouter.has(requestedDirectory)) {
+            serveAction = staticRouter.get(requestedDirectory);
+        }
     }
 
-    /*
-        REWORK ITEMS
-
-        -- this framework not handling handle url parameters & links with hashes properly...
-        ++ now handled by the parsedRoute object
-
-        -- where do I put my API / fetch-intended endpoints?
-        ++ down the pathway specified by the parsedRoute.path array elements
-
-        -- should subpath handling really be separated by static versus dynamic, or should it be separated by directory path?
-        ++ this new build will separate by directory path; static pathing will be handled within each path
-
-        -- if separated by directory path, should requested paths be registered so they don't have to be checked more than once?
-        ~~ TBD; potentially case by case, or register when successful & de-register when a previous success is unsuccessful
-
-        ++ IDEA: a site that the webmaster may develop from the site itself...
-        ~~ this framework may allow this idea to be developed as a sub-application of the node.nickhz.live domain
-    */
+    await serveAction(req, res);
 };
 
 const server = createServer(
